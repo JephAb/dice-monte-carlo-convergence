@@ -14,13 +14,14 @@ This is a game with at most two rolls. You are given a fair die with a whole num
 With these settings, a first roll of 3, 4, 5 or 6 is kept, and a first roll of 1 or 2 is rolled again.
 
 ## The question
-I wanted to test the law of large numbers for myself. It states that as the number of independent trials of a random experiment increases, the average of the observed results approaches the expected value. I also wanted to see how the standard error describes the spread of those averages around the expected value.
+I wanted to test the law of large numbers for myself. It states that as the number of independent trials of a random experiment increases, the average of the observed results approaches the expected value. I also wanted to see how the standard error describes the spread of those averages around the expected value, and to find which threshold gives the highest expected score.
 
 ## How the code is organized
 - `play_single_game`: plays one game and returns its score.
 - `run_monte_carlo`: plays many games and returns the running average after each one.
 - `expected_value`: calculates the exact expected value of one game.
 - `std_dev`: calculates the exact standard deviation of one game.
+- Best-threshold section: calculates the expected value for every threshold and finds the highest.
 
 ## Results
 **Exact values (the same every run):**
@@ -44,6 +45,15 @@ In about 95% of runs, the gap is within two standard errors (about 0.033), so th
 
 The running average wanders at first and settles close to the dashed line as more games are played, which is what the law of large numbers predicts. The x-axis uses a log scale so the early games are visible, and the vertical axis is zoomed in, so the first few games, which are far from the expected value, are cut off.
 
+## Finding the best threshold
+The threshold decides which first rolls you keep. I calculated the exact expected score for every threshold from 1 to 7 and found which one is highest.
+
+![Expected score by threshold](best_threshold_plot.png)
+
+- **Best threshold: 3**, with an expected score of 3.8333.
+- A reroll is worth 2.5 on average ((1 + 6) / 2 - 1), so a first roll is worth keeping only if it beats 2.5. Rolls of 3 to 6 do, and rolls of 1 and 2 do not.
+- Thresholds 2 and 4 each lose about 0.083 per game, because each one makes a single wrong choice on one of the six equally likely first rolls.
+
 ## What I learned
 - **Plotting in Python.** I learned how to plot graphs with matplotlib, including a running average, a reference line and a shaded band.
 - **Standard deviation vs. standard error.** The standard deviation describes how much single game scores vary around the expected value. The standard error describes how much the average of n games varies from one independent batch of games to the next. It equals the standard deviation divided by the square root of n, so averages of more games are more consistent.
@@ -54,6 +64,3 @@ The running average wanders at first and settles close to the dashed line as mor
 - You need the `matplotlib` library for the graph. On your own computer, install it with `pip install matplotlib`. It comes pre-installed in Google Colab.
 - The code is in `dice_monte_carlo_convergence.py`. You can run it in Google Colab, or save it as a `.py` file and run it with Python.
 - Because I did not set a random seed, the simulated numbers change slightly each time you run it.
-
-## Next steps
-- Learn how to find the best threshold and code it.
