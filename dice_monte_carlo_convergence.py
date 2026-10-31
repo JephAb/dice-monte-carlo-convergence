@@ -94,3 +94,30 @@ plt.ylabel('Running Average of Scores')
 plt.title('Convergence of Running Averages to the Total Expected Value')
 plt.legend()
 plt.show()
+
+# ----- Best threshold: expected score for every threshold -----
+thresholds = []
+evs = []
+
+for t in range(1, num_sides + 2):
+  threshold_ev = expected_value(num_sides, penalty, t)
+  thresholds.append(t)
+  evs.append(threshold_ev)
+
+best_threshold = thresholds[0]
+best_ev = evs[0]
+for i in range(len(evs)):
+  if evs[i] > best_ev:
+    best_ev = evs[i]
+    best_threshold = thresholds[i]
+
+print(f'The best threshold is {best_threshold} and its expected value is {best_ev:.4f}.')
+
+# ----- Plot: expected score by threshold -----
+plt.plot(thresholds, evs, marker='o', label='Expected score')
+plt.plot(best_threshold, best_ev, 'go', markersize=10, label=f'Best threshold: {best_threshold}')
+plt.xlabel('Threshold (keep first roll if roll >= threshold)')
+plt.ylabel('Expected score')
+plt.title('Expected Score by Threshold')
+plt.legend()
+plt.show()
